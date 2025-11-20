@@ -8,10 +8,10 @@ def bet(bet_amount, balance):
         return "you cant bet more than you have dummy"
     if bet_amount <= balance and bet_amount > 0:
         balance -= bet_amount
-        print(f"Bet of {bet_amount} accepted. New balance: {balance}")
+        print(f"Bet of {bet_amount} accepted. your balance is now {balance}")
     
-    num = int(input("Choose a number between 2 and 12: "))
-    if num < 2 or num > 12:
+    num = int(input("Choose a number between 2 and 11: "))
+    if num < 2 or num > 11:
         return "Invalid number chosen."
     over_under = input(f"Do you want to bet over or under {num}").lower()
     if over_under not in ['over', 'under']:
@@ -63,24 +63,35 @@ multipliers_under = {
 def run_game(bet_amount, balance, num, over_under):
     if over_under == "over":
         if dice_roll() > num:
-            print("You win!")
+            print(f"You win! {multipliers_over[num]}x")
             balance += bet_amount * multipliers_over[num]
+            print(f"Your balance is now {balance}")
             return balance
         else:
             print("You lose!")
+            print(f"Your balance is now {balance}")
     elif over_under == "under":
         if dice_roll() < num:
-            print("You win!")
+            print(f"You win! {multipliers_under[num]}x")
             balance += bet_amount * multipliers_under[num]
+            print(f"Your balance is now {balance}")
             return balance
         else:
             print("You lose!")
+            print(f"Your balance is now {balance}")
+    
     
 
-
 # Game stuff
-print("ROCKET DICE V1.0")
+print("ROCKET DICE V1.0.5")
 print(f"Your starting balance is: {balance}")
-bet_amount = int(input("Enter your bet amount: "))
-result = bet(bet_amount, balance)
-run_game(result[0], result[1], result[2], result[3])
+while balance > 0:
+    bet_amount = round(float(input("Enter your bet amount: ")),2)
+    result = bet(bet_amount, balance)
+    run_game(result[0], result[1], result[2], result[3])
+print("You are out of money! Game over.")
+
+
+
+
+
