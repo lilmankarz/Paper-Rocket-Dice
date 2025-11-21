@@ -63,34 +63,70 @@ multipliers_under = {
 def run_game(bet_amount, balance, num, over_under):
     if over_under == "over":
         if dice_roll() > num:
+            win = True
             print(f"You win! {multipliers_over[num]}x")
-            balance += bet_amount * multipliers_over[num]
+            winnings = bet_amount * multipliers_over[num]
+            balance += winnings
             print(f"Your balance is now {balance}")
-            return balance
         else:
             print("You lose!")
             print(f"Your balance is now {balance}")
+            winnings = 0
+            win = False
     elif over_under == "under":
         if dice_roll() < num:
+            win = True
             print(f"You win! {multipliers_under[num]}x")
-            balance += bet_amount * multipliers_under[num]
+            winnings = bet_amount * multipliers_under[num]
+            balance += winnings
             print(f"Your balance is now {balance}")
-            return balance
         else:
             print("You lose!")
             print(f"Your balance is now {balance}")
+            winnings = 0
+            win = False
+    return balance, win, winnings
+    
+def risk(balance, winnings):
+    print("-------------")
+    print(f"you made {winnings}")
+    run_risk = input("do you want to risk your winnings? (Y/N)").lower()
+    
+    if run_risk == "y":
+        print("you will pick 3 numbers now and if the dice lands on one of those numbers you win.")
+        risk_num = []
+        for i in range(3):
+            placeholder = int(input(f"pick number {i+1} (1-6): "))
+            risk_num.append(placeholder)
+        risk_outcome = random.randint(1,6)
+        print(f"the die rolled a {risk_outcome}")
+        if risk_outcome in risk_num:
+            print("YOU WIN!!")
+            print("will now recieve 2x your winnings of {winnings}")
+            winnings *= 2
+            balance += winnings
+            print(f"your new balance is {balance}")
+        else:
+            print("you lost")
+            balance -= winnings
+    elif run_risk == "n":
+        print("ok!")
+    return balance
     
     
 
 # Game stuff
-print("ROCKET DICE V1.0.5")
+print("ROCKET DICE V1.1.5")
 print(f"Your starting balance is: {balance}")
 while balance > 0:
+    win = False
     bet_amount = round(float(input("Enter your bet amount: ")),2)
-    result = bet(bet_amount, balance)
-    run_game(result[0], result[1], result[2], result[3])
+    bet_amount, balance, num, over_under = bet(bet_amount, balance)
+    balance, win, winnings = run_game(bet_amount, balance, num, over_under)
+    if win == True:
+        risk(balance, winnings)
+    
 print("You are out of money! Game over.")
-
 
 
 
